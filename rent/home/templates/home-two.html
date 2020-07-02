@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+  <!-- banner-section start  -->
+  <section class="banner-section banner-section--style2 bg_img" data-background="assets/images/banner.jpg">
+    <div class="banner-el-img"><img src="assets/images/elements/banner-man.png" alt="image"></div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-5">
+          <div class="car-search-area mt-0">
+            <h3 class="title">Rent Your Vehicle</h3>
+            <form class="car-search-form" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-xl-12 form-group">
+                  <select name="type">
+                    <option value="1" selected>Choose Your Car Type</option>
+                    <option value="Cars">Cars</option>
+                    <option value="Bikes">Bikes</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Cycle">Cycle</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                 <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Manufacturer" name="manufacturer">
+                </div>
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Model" name="model">
+                </div>
+
+              </div>
+
+              <div class="row">
+
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Image" name="image">
+                </div>
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Pirce Per Hour" name="pph">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Pickup Location" name="pickuploc">
+                </div>
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Drop Off Location" name="droploc">
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-calendar"></i>
+                  <input type='text' class='form-control has-icon' data-language='en' placeholder="yyyy-dd-mm" name="date">
+                </div>
+                <div class="form-group col-xl-6">
+                  <i class="fa fa-clock-o"></i>
+                  <input type="text" name="timepicker" class="form-control has-icon" placeholder="hh:mm:ss" name="time">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-xl-12">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Registrtation Code" name="code">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-xl-12">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Km Travelled" name="km">
+                </div>
+              </div>
+
+               <div class="row">
+                <div class="form-group col-xl-12">
+                  <i class="fa fa-map-marker"></i>
+                  <input class="form-control has-icon" type="text" placeholder="Descriptiom" name="description">
+                </div>
+              </div>
+
+              <button type="submit" class="cmn-btn btn-radius" name="rent">RENT</button>
+
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="banner-content">
+            <h1 class="title">Rent Your Car And Earn</h1>
+            <p> Earn from your vehicles when it is not being used. Just rent it!!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- banner-section end  -->
+
+{% endblock %}
