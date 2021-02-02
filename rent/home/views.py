@@ -200,12 +200,12 @@ class ReservationDetailView(DetailView):
                 free=False,
             )
             store_item.save()
-            return render(request, 'index.html')
+            return redirect('home:home')
         else:
             messages.error(request,"Please Login First")
             return redirect(reverse('home:login'))
 
-class Profile(BaseView): #/available
+class Profile(BaseView): #/profile
     def get(self,request):
         print(request.user.id)
         self.template_context['ovehicles'] = UserAvailable.objects.filter(user__id = self.request.user.id)
@@ -220,3 +220,9 @@ class Profile(BaseView): #/available
             return render(request, 'search-list.html', self.template_context)
         else:
             return render(request,'hire-profile.html',self.template_context)
+    def post(self,request,slug):
+        print(slug)
+        get_vech = VehicleAvailable.objects.filter(slug = slug)[0]
+        if 'cmn-btn' in self.request.POST:
+            UserAvailable.objects.get ( items = get_vech  ).delete()
+        return redirect('home:profile')
