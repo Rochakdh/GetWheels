@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 # from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.reverse import reverse_lazy
 
-from .models import VehicleAvailable, UserAvailable,ItemsOrdered,Renter
+from .models import VehicleAvailable, UserAvailable,ItemsOrdered
 from django.db.models import Q
 from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
@@ -166,21 +166,26 @@ class Reservation(BaseView):
 class ReservationDetailView(DetailView):
     model = VehicleAvailable
     template_name = 'reservation.html'
+    def get(self,request,slug):
+        if not request.user.is_authenticated:
+            messages.error(request, "Please Login First")
+            return redirect(reverse('home:login'))
+        return super(ReservationDetailView, self).get(request,slug)
 
     def post(self, request,slug):
-        if request.user is not None:
+        if request.user.is_authenticated:
             username = request.user
             phone = request.POST.get('phone')
             location = request.POST.get('location')
             description = request.POST.get('description')
             item = get_object_or_404(VehicleAvailable, slug=slug)
-            renter_details=get_object_or_404(Renter,autocode=item.vech_owner.autocode)
+            # renter_details=get_object_or_404(Renter,autocode=item.vech_owner.autocode)
             ordervech = UserAvailable.objects.create(
                 # items=item,
                 user=username,
                 phone=phone,
                 location=location,
-                renter_details=renter_details,
+                # renter_details=renter_details,
                 ordered=True,
                 info=description
             )
@@ -190,7 +195,7 @@ class ReservationDetailView(DetailView):
             store_item = ItemsOrdered.objects.create(
                 user=username,
                 item=item,
-                orderedfrom=renter_details,
+                # orderedfrom=renter_details,
                 ordered=True,
                 free=False,
             )
@@ -215,5 +220,3 @@ class Profile(BaseView): #/available
             return render(request, 'search-list.html', self.template_context)
         else:
             return render(request,'hire-profile.html',self.template_context)
-
-

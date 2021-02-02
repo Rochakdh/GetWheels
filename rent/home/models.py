@@ -12,16 +12,16 @@ import string
 VTYPE=(('Car','Car'),('Bike','Bike'),('Bus','Bus'),('Truck','Truck'),('Bicycle','Bicycle'))
 RENTERTYPE=(('Individual','Individual'),('Company','Company'))
 
-class Renter(models.Model):
-    register_as = models.TextField(choices=RENTERTYPE)
-    com_ind_name = models.TextField(max_length=500)
-    available_from=models.TimeField()
-    available_till = models.TimeField()
-    autocode = models.CharField(max_length=100, blank=True, unique=True,default=uuid.uuid4)
-    phoneno = models.IntegerField()
-    special_rating = models.BooleanField(default=0)
-    def __str__(self):
-        return self.com_ind_name
+# class Renter(models.Model):
+#     register_as = models.TextField(choices=RENTERTYPE)
+#     com_ind_name = models.TextField(max_length=500)
+#     available_from=models.TimeField()
+#     available_till = models.TimeField()
+#     # autocode = models.CharField(max_length=100, blank=True, unique=True,default=uuid.uuid4)
+#     phoneno = models.IntegerField()
+#     special_rating = models.BooleanField(default=0)
+#     def __str__(self):
+#         return self.com_ind_name
 
 class VehicleAvailable(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
@@ -57,7 +57,7 @@ class UserAvailable(models.Model):#all details of users that want to order vehic
     phone=models.IntegerField()
     items = models.ManyToManyField(VehicleAvailable)
     location=models.TextField(max_length=200)
-    renter_details=models.ForeignKey(Renter,on_delete=models.CASCADE)
+    # renter_details=models.ForeignKey(Renter,on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     info=models.TextField(max_length=400)
     def __str__(self):
@@ -67,7 +67,7 @@ class UserAvailable(models.Model):#all details of users that want to order vehic
 class ItemsOrdered(models.Model): #all vehicles detail tha has been ordered for trasanction history
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.DO_NOTHING)
     item = models.ForeignKey(VehicleAvailable,on_delete=models.CASCADE)
-    orderedfrom = models.ForeignKey(Renter,on_delete=models.CASCADE)
+    # orderedfrom = models.ForeignKey(Renter,on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     free = models.BooleanField(default=False)
 

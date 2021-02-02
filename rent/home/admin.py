@@ -1,5 +1,5 @@
 from django.contrib import admin
-from  .models import VehicleAvailable,UserAvailable,Renter,ItemsOrdered,Consultaion
+from  .models import VehicleAvailable,UserAvailable,ItemsOrdered,Consultaion
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAd
 # import random
@@ -25,6 +25,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAd
 # admin.site.register(VehicleAvailable,VehicleAvailableAdmin)
 admin.site.register(VehicleAvailable)
 admin.site.register(UserAvailable)
-admin.site.register(Renter)
+# admin.site.register(Renter)
 admin.site.register(ItemsOrdered)
 admin.site.register(Consultaion)
