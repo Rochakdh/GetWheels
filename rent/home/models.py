@@ -13,7 +13,6 @@ VTYPE=(('Car','Car'),('Bike','Bike'),('Bus','Bus'),('Truck','Truck'),('Bicycle',
 RENTERTYPE=(('Individual','Individual'),('Company','Company'))
 
 class Renter(models.Model):
-
     register_as = models.TextField(choices=RENTERTYPE)
     com_ind_name = models.TextField(max_length=500)
     available_from=models.TimeField()
@@ -26,7 +25,7 @@ class Renter(models.Model):
 
 class VehicleAvailable(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
-    vech_owner = models.ForeignKey(Renter,on_delete=models.CASCADE)
+    # vech_owner = models.ForeignKey(Renter,on_delete=models.CASCADE)
     type = models.TextField()
     manufacturer_company = models.TextField(max_length=100)
     model = models.TextField(max_length=100)
@@ -52,14 +51,6 @@ class VehicleAvailable(models.Model):
     def get_absolute_url(self):
         return reverse("home:reservation", kwargs={'slug': self.slug})
 
-# class (models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-#     items = models.ManyToManyField(VehicleAvailable)
-#     # renter_details=items.vech_owner
-#     ordered = models.BooleanField(default=False)
-#
-#     def __str__(self):
-#         return self.user.username
 
 class UserAvailable(models.Model):#all details of users that want to order vehicle
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
@@ -82,3 +73,10 @@ class ItemsOrdered(models.Model): #all vehicles detail tha has been ordered for 
 
     def __str__(self):
         return self.user.username +"-->"+ self.item.__str__()
+
+class Consultaion(models.Model):
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    email = models.EmailField()
+    message = models.TextField()
+    phone_no = models.IntegerField()

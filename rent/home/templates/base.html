@@ -74,7 +74,7 @@
 
                 </div>
                 <div>
-                  <a href="accounts/logout" style="color:white">LOGOUT</a>
+                  <a href="{% url 'home:logout' %}" style="color:white">LOGOUT</a>
                 </div>
                 {% else %}
               </div>
@@ -175,23 +175,6 @@
                 </li>
               </ul>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-sm-6">
-            <p class="copy-right-text"><a href="templateshub.net">Templates Hub</a></p>
-          </div>
-          <div class="col-sm-6">
-            <ul class="payment-method d-flex justify-content-end">
-              <li>We accept</li>
-              <li><img src="{%static 'assets/images/money-method/1.png' %}" alt="image"></li>
-              <li><img src="{%static 'assets/images/money-method/2.png ' %}" alt="image"></li>
-              <li><img src="{%static 'assets/images/money-method/3.png ' %}" alt="image"></li>
-            </ul>
           </div>
         </div>
       </div>

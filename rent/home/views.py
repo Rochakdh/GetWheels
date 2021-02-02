@@ -1,16 +1,20 @@
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, RedirectView
 from django.contrib import messages
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 # from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.reverse import reverse_lazy
+
 from .models import VehicleAvailable, UserAvailable,ItemsOrdered,Renter
 from django.db.models import Q
 from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
 # from twilio.rest import Client
 
+from .forms import ConsultaionForm
 
 
 
@@ -24,10 +28,24 @@ class BaseView(View):
 
 class IndexView(BaseView):
     def post(self, request):
-        return render(request, 'index.html')
+        form = ConsultaionForm(request.POST)
+        if form.is_valid():
+            form.save()
+        else:
+            messages.error(request,'Invalid Entries')
+        return render(request, 'index.html',self.template_context)
 
     def get(self, request):
+        form = ConsultaionForm()
+        self.template_context['form'] = form
         return render(request, 'index.html', self.template_context)
+
+class LogoutView(RedirectView):
+    url = reverse_lazy('home:home')
+
+    def dispatch(self, request, *args, **kwargs):
+        logout(request)
+        return super(LogoutView, self).dispatch(request, *args, **kwargs)
 
 
 class LoginView(BaseView):
@@ -44,8 +62,11 @@ class LoginView(BaseView):
         return render(request, 'login.html', self.template_context)
 
     def get(self, request):
-        return render(request, 'login.html', self.template_context)
-
+        # print(request.user)
+        if request.user.is_authenticated:
+            return redirect('home:home')
+        else:
+            return render(request, 'login.html', self.template_context)
 
 class SignupView(BaseView):
     def post(self, request):
@@ -68,7 +89,7 @@ class SignupView(BaseView):
                         password=password
                     )
                     user.save()
-        return render(request, 'login.html')
+        return redirect('home:login')
 
     def get(self, request):
         return render(request, 'registration.html')
@@ -94,10 +115,10 @@ class RentVehicles(View):# /rent
         username = self.request.POST.get('UserName')
         password = self.request.POST.get('Password')
         user = auth.authenticate(username=username, password=password)
-        if user is not None:
+        if request.user:
             username = request.user
             code=request.POST.get('code')
-            codecheck=get_object_or_404(Renter, autocode=code)
+            # codecheck=get_object_or_404(Renter, autocode=code)
             manufacturer = request.POST.get('manufacturer')
             image = request.POST.get('image')
             model = request.POST.get('model')
@@ -109,10 +130,10 @@ class RentVehicles(View):# /rent
             date = request.POST.get('date')
             description = request.POST.get('description')
             km = request.POST.get('km')
-            # slug=manufacturer+"-"+model+"-"+type+"-"+value
+            slug=manufacturer+"-"+model+"-"+type+"-"+date
             availvech = VehicleAvailable.objects.create(
                 user=username,
-                vech_owner=codecheck,
+                # vech_owner=codecheck,
                 type =type,
                 manufacturer_company = manufacturer,
                 model = model,
@@ -125,7 +146,7 @@ class RentVehicles(View):# /rent
                 image = image,
                 priceph = pph,
                 km_travelled = km,
-                # slug=slug,
+                slug=slug,
                 ordered=False,
             )
             availvech.save()
@@ -174,8 +195,25 @@ class ReservationDetailView(DetailView):
                 free=False,
             )
             store_item.save()
-
             return render(request, 'index.html')
         else:
             messages.error(request,"Please Login First")
             return redirect(reverse('home:login'))
+
+class Profile(BaseView): #/available
+    def get(self,request):
+        print(request.user.id)
+        self.template_context['ovehicles'] = UserAvailable.objects.filter(user__id = self.request.user.id)
+        print(self.template_context['ovehicles'])
+        query = request.GET.get('query')
+        if query is not None and query != '':
+            self.template_context['search_result'] = VehicleAvailable.objects.filter(
+                Q(type__icontains=query)| Q(model__icontains=query) |Q(manufacturer_company__startswith=query)|
+                Q(manufacturer_company__endswith=query)
+            )
+            self.template_context['search_for'] = query
+            return render(request, 'search-list.html', self.template_context)
+        else:
+            return render(request,'hire-profile.html',self.template_context)
+
+

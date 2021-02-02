@@ -8,6 +8,7 @@ app_name = 'home'
 urlpatterns=[
     path('',views.IndexView.as_view(), name='home'),
     path('login/',views.LoginView.as_view(), name='login'),
+    path('logout/',views.LogoutView.as_view(), name='logout'),
     path('signup/',views.SignupView.as_view(), name='signup'),
     path('available/',views.Available.as_view(),name='available'),
     path('rent/', views.RentVehicles.as_view(), name='rent'),

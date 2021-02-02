@@ -28,6 +28,7 @@
           <div class="registration-block text-center">
             <div class="registration-block-inner">
               <h3 class="title">create  your account</h3>
+              {% if messages %} {% for message in messages %} <p style="color: red">{{message}}  </p> {% endfor %} {% endif %}
               <form class="registration-form" method="post">
                 {% csrf_token %}
                 <div class="frm-group">
