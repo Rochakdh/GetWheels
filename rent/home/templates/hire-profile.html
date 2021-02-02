@@ -78,7 +78,12 @@
                                     <span class="price"> Rs. {{avehicle.priceph}} per day</span>
                                     <p>Status : Not Approved </p>
                                     <p> Owner : {{avehicle.user}} </p>
-                                    <a href="{{avehicle.get_absolute_url}}" class="cmn-btn">Edit Rent</a>
+                                    <a>
+                                        <form method="post" action="{% url 'home:reservation-update' slug=avehicle.slug %}" >
+                                            {% csrf_token %}
+                                            <button type="submit" class="cmn-btn" name="update-btn" >Edit Rent</button>
+                                        </form>
+                                    </a>
                                     <a>
                                         <form method="post" action="{% url 'home:cancel' slug=avehicle.slug %}" >
                                             {% csrf_token %}
