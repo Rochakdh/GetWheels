@@ -54,7 +54,7 @@ class VehicleAvailable(models.Model):
 
 class UserAvailable(models.Model):#all details of users that want to order vehicle
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
-    phone=models.IntegerField()
+    phone=models.IntegerField(null=True, blank=True)
     items = models.ManyToManyField(VehicleAvailable)
     location=models.TextField(max_length=200)
     # renter_details=models.ForeignKey(Renter,on_delete=models.CASCADE)

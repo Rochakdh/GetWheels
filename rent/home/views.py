@@ -222,26 +222,50 @@ class Profile(BaseView): #/profile
             return render(request,'hire-profile.html',self.template_context)
 
     def post(self,request,slug):
-        print(slug)
+    #     print(slug)
         get_vech = VehicleAvailable.objects.filter(slug = slug)[0]
         if 'cmn-btn' in self.request.POST:
             UserAvailable.objects.get ( items = get_vech  ).delete()
+    #     if 'update-btn' in self.request.POST:
+    #         user_detail = VehicleAvailable.objects.get(slug=slug)
+    #         self.template_context['userdetail'] = user_detail
+    #         self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
+            # phone = request.POST.get('phone')
+            # location = request.POST.get('location')
+            # description = request.POST.get('description')
+            # UserAvailable.objects.update(
+            #     phone=phone,
+            #     location=location,
+            #     info=description
+            # )
+            # return render(request, 'reservation-update.html', self.template_context)
+        return redirect('home:profile')
+
+class UpdateOrder(BaseView):
+    def get(self,request,slug):
+        print(slug)
+        get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
+        user_detail = VehicleAvailable.objects.get(slug=slug)
+        self.template_context['userdetail'] = user_detail
+        self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
+        return render(self.request, 'reservation-update.html', self.template_context)
+
+    def post(self, request, slug):
+        print(slug)
+        get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
+        if 'cmn-btn' in self.request.POST:
+            UserAvailable.objects.get(items=get_vech).delete()
         if 'update-btn' in self.request.POST:
             user_detail = VehicleAvailable.objects.get(slug=slug)
             self.template_context['userdetail'] = user_detail
             self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
-            # if request.user.is_authenticated:
-            #     # username = request.user
-            #     phone = request.POST.get('phone')
-            #     location = request.POST.get('location')
-            #     description = request.POST.get('description')
-            #     # renter_details=get_object_or_404(Renter,autocode=item.vech_owner.autocode)
-            #     ordervech = UserAvailable.objects.update(
-            #         # items=item,
-            #         phone=phone,
-            #         location=location,
-            #         info=description
-            #     )
-            #     ordervech.save()
+            # phone = request.POST.get('phone')
+            # location = request.POST.get('location')
+            # description = request.POST.get('description')
+            # UserAvailable.objects.update(
+            #     phone=phone,
+            #     location=location,
+            #     info=description
+            # )
             return render(request, 'reservation-update.html', self.template_context)
         return redirect('home:profile')

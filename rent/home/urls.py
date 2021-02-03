@@ -15,7 +15,7 @@ urlpatterns=[
     path('available/',views.Available.as_view(),name='available'),
     path('rent/', views.RentVehicles.as_view(), name='rent'),
     path('reservation/<slug>', views.ReservationDetailView.as_view(), name='reservation'),
-    path('reservation-update/<slug:slug>', views.Profile.as_view(), name='reservation-update'),
+    path('reservation-update/<slug:slug>', views.UpdateOrder.as_view(), name='reservation-update'),
     # path('search/',views.SearchView.as_view(),name = 'search'),
 
 ]
