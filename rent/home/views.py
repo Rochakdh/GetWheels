@@ -227,17 +227,11 @@ class Profile(BaseView): #/profile
         if 'cmn-btn' in self.request.POST:
             UserAvailable.objects.get ( items = get_vech  ).delete()
             return redirect('home:profile')
-        if 'update-btn' in self.request.POST:
-            # user_detail = VehicleAvailable.objects.get(slug=slug)
-            # self.template_context['userdetail'] = user_detail
-            # self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
-            return render(request, 'reservation-update.html', self.template_context)
 
 
 class UpdateOrder(BaseView):
 
     def get(self,request,slug):
-        # print(slug)
         get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
         user_detail = VehicleAvailable.objects.get(slug=slug)
         self.template_context['userdetail'] = user_detail
@@ -247,10 +241,6 @@ class UpdateOrder(BaseView):
     def post(self,request, slug):
         print("post")
         get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
-        # if 'cmn-btn' in self.request.POST:
-        #     UserAvailable.objects.get(items = get_vech).delete()
-        #     # return redirect('home:profile')
-        # if 'cmn-btn-update' in self.request.POST:
         user_detail = VehicleAvailable.objects.get(slug=slug)
         self.template_context['userdetail'] = user_detail
         self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
@@ -262,6 +252,4 @@ class UpdateOrder(BaseView):
             location=location,
             info=description
         )
-            # self.get(self,slug)
         return redirect('home:profile')
-        # return render(request, 'reservation-update.html', self.template_context)

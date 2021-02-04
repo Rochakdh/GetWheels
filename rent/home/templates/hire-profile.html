@@ -79,9 +79,9 @@
                                     <p>Status : Not Approved </p>
                                     <p> Owner : {{avehicle.user}} </p>
                                     <a>
-                                        <form method="post" action="{% url 'home:reservation-update' slug=avehicle.slug %}" >
+                                        <form method="get" action="{% url 'home:reservation-update' slug=avehicle.slug %}" >
                                             {% csrf_token %}
-                                            <button type="submit" class="cmn-btn" name="update-btn" >Edit Rent</button>
+                                            <button class="cmn-btn" name="update-btn" >Edit Rent</button>
                                         </form>
                                     </a>
                                     <a>
