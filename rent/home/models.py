@@ -56,10 +56,10 @@ class UserAvailable(models.Model):#all details of users that want to order vehic
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
     phone=models.IntegerField(null=True, blank=True)
     items = models.ManyToManyField(VehicleAvailable)
-    location=models.TextField(max_length=200)
+    location=models.TextField(max_length=200,blank=True,null=True)
     # renter_details=models.ForeignKey(Renter,on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
-    info=models.TextField(max_length=400)
+    info=models.TextField(max_length=400,null=True,blank=True)
     def __str__(self):
         return self.user.username +"-->"+ self.items.__str__()
 
