@@ -68,8 +68,8 @@
                 {% if user.is_authenticated %}
                 <select onchange="location = this.value;">
                   <option value="/">{{user.username}}</option>
-                  <option value="/available">{{user.username}} as Hirer </option>
-                  <option value="/rent"> {{user.username}} as Renter </option>
+                  <option value="/profile">{{user.username}} Hirer Profile </option>
+                  <option value="/rent"> {{user.username}} Renter Profile </option>
                 </select>
 
                 </div>
