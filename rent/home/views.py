@@ -230,7 +230,6 @@ class Profile(BaseView): #/profile
 
 
 class UpdateOrder(BaseView):
-
     def get(self,request,slug):
         get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
         user_detail = VehicleAvailable.objects.get(slug=slug)
@@ -253,3 +252,19 @@ class UpdateOrder(BaseView):
             info=description
         )
         return redirect('home:profile')
+
+class RenterProfile(BaseView):
+    def get(self,request):
+        self.template_context['rentvehicles'] = VehicleAvailable.objects.filter(user__id=self.request.user.id)
+        vehicle_req = VehicleAvailable.objects.get(user = request.user )
+        self.template_context ['requests'] = UserAvailable.objects.filter(items = vehicle_req )
+        print(self.template_context['rentvehicles'])
+        query = request.GET.get('query')
+        if query is not None and query != '':
+            self.template_context['search_result'] = VehicleAvailable.objects.filter(
+                Q(type__icontains=query) | Q(model__icontains=query) | Q(manufacturer_company__startswith=query) |
+                Q(manufacturer_company__endswith=query)
+            )
+            self.template_context['search_for'] = query
+            return render(request, 'search-list.html', self.template_context)
+        return render(request,'rent-profile.html',self.template_context)

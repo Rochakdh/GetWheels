@@ -16,6 +16,7 @@ urlpatterns=[
     path('rent/', views.RentVehicles.as_view(), name='rent'),
     path('reservation/<slug>', views.ReservationDetailView.as_view(), name='reservation'),
     path('reservation-update/<slug:slug>', views.UpdateOrder.as_view(), name='reservation-update'),
+    path ('renterprofile/',views.RenterProfile.as_view(),name = 'renter-profile')
     # path('search/',views.SearchView.as_view(),name = 'search'),
 
 ]
