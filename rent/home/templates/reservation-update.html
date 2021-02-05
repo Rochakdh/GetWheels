@@ -26,7 +26,7 @@
             <div class="col-lg-8">
                 <div class="reservation-details-area">
                     <div class="thumb">
-                        <img src="{{object.image.urls}}" alt="images">
+                        <img src="{{userdetail.image}}" alt="images">
                     </div>
                     <div class="content">
                         <div class="content-block">
@@ -34,15 +34,15 @@
                             <span class="price">Rs. {{userdetail.priceph}} per hour</span><br>
                             <p><i class="fa fa-tachometer"></i>{{userdetail.km_travelled}} KM</p>
                             <p><i class="fa fa-sliders"></i>{{userdetail.available_till_date}}</p>
-                            <p>Owner : {{userdetail.vech_owner}}</p>
+                            <p>Owner : {{userdetail.user}}</p>
                             <p>Pickup Location : {{userdetail.pickup}}</p>
                             <p>Dropoff Location : {{userdetail.dropup}}</p>
                             <p>{{userdetail.description}}</p>
                         </div>
                         <form class="reservation-form" method="post">
-                            {% csrf_token %}>
+                            {% csrf_token %}
                             <div class="content-block">
-                                <h3 class="title">personal information</h3>
+                                <h3 class="title"> personal information</h3>
                                 <div class="row">
                                     <!--                    <div class="col-lg-6 form-group">-->
                                     <!--                      <input type="text" placeholder="Name">-->
