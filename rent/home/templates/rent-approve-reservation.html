@@ -53,36 +53,41 @@
         <div class="row mt-70">
             <div class="col-lg-12">
                 <div class="car-search-result-area list--view row mb-none-30">
-                    {% for renter in orderedfrom %}
+                    {% for ordered in orderedfrom %}
+                    {% for alloders in ordered.items.all %}
+
                     <div class="col-md-6 col-12">
                         <div class="car-item car-item--style2">
-                            <div class="thumb bg_img" data-background="{{renter.image}}"></div>
+                            <div class="thumb bg_img" data-background="{{alloders.image}}"></div>
                             <div class="car-item-body">
                                 <div class="content">
-                                    <h4 class="title">{{renter.manufacturer_company}} {{renter.model}}
-                                        {{renter.type}}</h4>
-                                    <span class="price"> Rs. {{renter.priceph}} per day</span>
+                                    <h4 class="title">{{alloders.manufacturer_company}} {{alloders.model}}
+                                        {{alloders.items.type}}</h4>
+                                    <span class="price"> Rs. {{alloders.priceph}} per day</span>
 
-                                        <p>Requested By:  {{requests.count}}</p>
+                                        <p>Requested By:  {{ordered.user}}</p>
+                                        <p> Phone No. :{{ordered.phone}}</p>
+                                        <p> Description :{{ordered.info}}</p>
                                         <a>
 
-                                        <form method="get" action="{% url 'home:approve-rent' slug=renter.slug %}">
-                                            <button class="cmn-btn" > Approve service </button>
+                                        <form method="get" >
+
+                                            <button class="cmn-btn" name="approve-btn-service"> Fix Order </button>
                                         </form>
                                     </a>
                                     <a>
-                                        <form method="post" action="{% url 'home:cancel' slug=renter.slug %}" >
+                                        <form method="post" >
                                             {% csrf_token %}
-                                            <button type="submit" class="cmn-btn" name="cmn-btn"> Remove </button>
+                                            <button type="submit" class="cmn-btn" name="rent-cmn-btn"> Reject Order </button>
                                         </form>
                                     </a>
 <!--                                    <a href="{{avehicle.get_absolute_url}}" class="cmn-btn">Confirm Rent</a>-->
                                 </div>
                                 <div class="car-item-meta">
                                     <ul class="details-list">
-                                        <li><i class="fa fa-car"></i>{{renter.model}}</li>
-                                        <li><i class="fa fa-tachometer"></i>{{renter.km_travelled}} KM</li>
-                                        <li><i class="fa fa-sliders"></i>{{renter.available_till_date}}</li>
+                                        <li><i class="fa fa-car"></i>{{alloders.model}}</li>
+                                        <li><i class="fa fa-tachometer"></i>{{alloders.km_travelled}} KM</li>
+                                        <li><i class="fa fa-sliders"></i>{{alloders.available_till_date}}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -90,6 +95,7 @@
                     </div>
                     <!-- car-item end -->
 
+                    {% endfor %}
                     {% endfor %}
                 </div>
 

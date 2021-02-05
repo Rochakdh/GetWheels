@@ -268,3 +268,15 @@ class RenterProfile(BaseView):
             self.template_context['search_for'] = query
             return render(request, 'search-list.html', self.template_context)
         return render(request,'rent-profile.html',self.template_context)
+
+    def post(self, request, slug):
+        #     print(slug)
+        get_vech = VehicleAvailable.objects.get(slug=slug)
+        UserAvailable.objects.get(items=get_vech).delete()
+        return redirect('home:renter-profile')
+
+class RenterApproval(BaseView):
+    def get(self,request,slug):
+        ordered_vehicle = VehicleAvailable.objects.get(user = request.user)
+        self.template_context['orderedfrom'] = UserAvailable.objects.filter(items = ordered_vehicle)
+        return render(request, 'rent-approve-reservation.html',self.template_context )
