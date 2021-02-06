@@ -69,10 +69,10 @@
                                         <p> Phone No. :{{ordered.phone}}</p>
                                         <p> Description :{{ordered.info}}</p>
                                         <a>
-
-                                        <form method="get" >
-
-                                            <button class="cmn-btn" name="approve-btn-service"> Fix Order </button>
+                                        
+                                        <form method="post" action="{% url 'home:fix-order' user_id=ordered.user.id %}">
+                                            {% csrf_token %}
+                                            <button class="cmn-btn" name="approve-btn-service" type="submit"> Fix Order </button>
                                         </form>
                                     </a>
                                     <a>

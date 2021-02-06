@@ -280,3 +280,13 @@ class RenterApproval(BaseView):
         ordered_vehicle = VehicleAvailable.objects.get(user = request.user)
         self.template_context['orderedfrom'] = UserAvailable.objects.filter(items = ordered_vehicle)
         return render(request, 'rent-approve-reservation.html',self.template_context )
+
+
+class RenterAprovalFixOrder(BaseView):
+    def post(self,request,user_id):
+        ordered_user = UserAvailable.objects.get(user__id=user_id)
+        print("---------------------------------------------")
+        print(ordered_user)
+        ordered_user.ordered = True
+        ordered_user.save()
+        return redirect('home:renter-profile')
