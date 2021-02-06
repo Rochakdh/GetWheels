@@ -186,7 +186,7 @@ class ReservationDetailView(DetailView):
                 phone=phone,
                 location=location,
                 # renter_details=renter_details,
-                ordered=True,
+                approved=False,
                 info=description
             )
             ordervech.items.add(item)
@@ -279,14 +279,25 @@ class RenterApproval(BaseView):
     def get(self,request,slug):
         ordered_vehicle = VehicleAvailable.objects.get(user = request.user)
         self.template_context['orderedfrom'] = UserAvailable.objects.filter(items = ordered_vehicle)
+        self.template_context['approvedcount'] = UserAvailable.objects.filter(approved = True )
         return render(request, 'rent-approve-reservation.html',self.template_context )
 
 
 class RenterAprovalFixOrder(BaseView):
     def post(self,request,user_id):
-        ordered_user = UserAvailable.objects.get(user__id=user_id)
-        print("---------------------------------------------")
-        print(ordered_user)
-        ordered_user.ordered = True
-        ordered_user.save()
-        return redirect('home:renter-profile')
+        if 'approve-btn-service' in request.POST:
+            ordered_user = UserAvailable.objects.get(user__id=user_id)
+            print("---------------------------------------------")
+            print(ordered_user)
+            ordered_user.approved = True
+            # ordered_user.rejected = False
+            ordered_user.save()
+            return redirect('home:renter-profile')
+        if 'reject-rent-cmn-btn' in request.POST:
+            ordered_user = UserAvailable.objects.get(user__id=user_id)
+            print(ordered_user)
+            ordered_user.approved = False
+            # ordered_user.rejected = True
+            ordered_user.save()
+            return redirect('home:renter-profile')
+

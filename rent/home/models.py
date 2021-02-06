@@ -58,7 +58,9 @@ class UserAvailable(models.Model):#all details of users that want to order vehic
     items = models.ManyToManyField(VehicleAvailable)
     location=models.TextField(max_length=200,blank=True,null=True)
     # renter_details=models.ForeignKey(Renter,on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
+
     info=models.TextField(max_length=400,null=True,blank=True)
     def __str__(self):
         return self.user.username +"-->"+ self.items.__str__()
