@@ -18,8 +18,8 @@ urlpatterns=[
     path('reservation-update/<slug:slug>', views.UpdateOrder.as_view(), name='reservation-update'),
     path ('renterprofile/',views.RenterProfile.as_view(),name = 'renter-profile'),
     path ('approverent/<slug:slug>/',views.RenterApproval.as_view(),name = 'approve-rent'),
-    path ('orderdfixed/<int:user_id>/',views.RenterAprovalFixOrder.as_view(),name = 'fix-order'),
-    path ('orderdreject/<int:user_id>/',views.RenterAprovalFixOrder.as_view(),name = 'reject-order')
+    path ('orderdfixed/<slug:slug>/<int:user_id>/',views.RenterAprovalFixOrder.as_view(),name = 'fix-order'),
+    path ('orderdreject/<slug:slug>/<int:user_id>/',views.RenterAprovalFixOrder.as_view(),name = 'reject-order')
     # path('search/',views.SearchView.as_view(),name = 'search'),
 
 ]

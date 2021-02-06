@@ -70,13 +70,13 @@
                                         <p> Description :{{ordered.info}}</p>
                                         {% if ordered.approved or approvedcount.count == 0 %}
                                         <a>
-                                        <form method="post" action="{% url 'home:fix-order' user_id=ordered.user.id %}">
+                                        <form method="post" action="{% url 'home:fix-order' slug=alloders.slug user_id=ordered.user.id %} ">
                                             {% csrf_token %}
                                             <button class="cmn-btn" name="approve-btn-service" type="submit"> Fix Order </button>
                                         </form>
                                     </a>
                                     <a>
-                                        <form method="post" action="{% url 'home:reject-order' user_id=ordered.user.id %}" >
+                                        <form method="post" action="{% url 'home:reject-order' slug=alloders.slug user_id=ordered.user.id %}" >
                                             {% csrf_token %}
                                             <button type="submit" class="cmn-btn" name="reject-rent-cmn-btn"> Reject Order </button>
                                         </form>

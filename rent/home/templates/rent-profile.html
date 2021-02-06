@@ -64,17 +64,22 @@
                                     <span class="price"> Rs. {{renter.priceph}} per day</span>
 
                                         <p>Requested By:  {{requests.count}}</p>
+                                        {% if approvedcount.count != 0 %}
+                                            <p> Status : <b> Finalized </b></p>
+                                        {% else %}
+                                            <p> Status : <b> Not Finalized </b></p>
+                                        {% endif %}
                                         <a>
 
                                         <form method="get" action="{% url 'home:approve-rent' slug=renter.slug %}">
-                                            <button class="cmn-btn" > Approve service </button>
+                                            <button class="cmn-btn" > See Orders </button>
                                         </form>
                                     </a>
                                     <a>
-                                        <form method="post" action="{% url 'home:cancel' slug=renter.slug %}" >
-                                            {% csrf_token %}
-                                            <button type="submit" class="cmn-btn" name="cmn-btn"> Remove </button>
-                                        </form>
+<!--                                        <form method="post" action="{% url 'home:cancel' slug=renter.slug %}" >-->
+<!--                                            {% csrf_token %}-->
+<!--                                            <button type="submit" class="cmn-btn" name="cmn-btn"> Remove </button>-->
+<!--                                        </form>-->
                                     </a>
 <!--                                    <a href="{{avehicle.get_absolute_url}}" class="cmn-btn">Confirm Rent</a>-->
                                 </div>

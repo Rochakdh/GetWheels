@@ -76,7 +76,11 @@
                                     <h4 class="title">{{avehicle.manufacturer_company}} {{avehicle.model}}
                                         {{avehicle.type}}</h4>
                                     <span class="price"> Rs. {{avehicle.priceph}} per day</span>
+                                    {% if  order.approved %}
+                                    <p>Status : Approved </p>
+                                    {% else %}
                                     <p>Status : Not Approved </p>
+                                    {% endif %}
                                     <p> Owner : {{avehicle.user}} </p>
                                     <a>
                                         <form method="get" action="{% url 'home:reservation-update' slug=avehicle.slug %}" >

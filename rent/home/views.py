@@ -207,9 +207,7 @@ class ReservationDetailView(DetailView):
 
 class Profile(BaseView): #/profile
     def get(self,request):
-        print(request.user.id)
         self.template_context['ovehicles'] = UserAvailable.objects.filter(user__id = self.request.user.id)
-        print(self.template_context['ovehicles'])
         query = request.GET.get('query')
         if query is not None and query != '':
             self.template_context['search_result'] = VehicleAvailable.objects.filter(
@@ -223,9 +221,13 @@ class Profile(BaseView): #/profile
 
     def post(self,request,slug):
     #     print(slug)
-        get_vech = VehicleAvailable.objects.filter(slug = slug)[0]
+        get_vech = VehicleAvailable.objects.get(slug = slug)
+        print("xxxxxx")
+        print(get_vech)
+        print("xxxxxx")
+
         if 'cmn-btn' in self.request.POST:
-            UserAvailable.objects.get ( items = get_vech  ).delete()
+            UserAvailable.objects.get ( items = get_vech , user= request.user  ).delete()
             return redirect('home:profile')
 
 
@@ -234,30 +236,28 @@ class UpdateOrder(BaseView):
         get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
         user_detail = VehicleAvailable.objects.get(slug=slug)
         self.template_context['userdetail'] = user_detail
-        self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
+        self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech,user = request.user)
         return render(request, 'reservation-update.html', self.template_context)
 
     def post(self,request, slug):
         print("post")
-        get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
+        get_vech = VehicleAvailable.objects.filter(slug=slug)
         user_detail = VehicleAvailable.objects.get(slug=slug)
         self.template_context['userdetail'] = user_detail
         self.template_context['hirer'] = UserAvailable.objects.get(items=get_vech)
-        phone = request.POST.get('phone')
-        location = request.POST.get('location')
-        description = request.POST.get('description')
-        UserAvailable.objects.update(
-            phone=phone,
-            location=location,
-            info=description
-        )
+        user_avail_update = UserAvailable.objects.get(items=get_vech, user = request.user)
+        user_avail_update.phone = request.POST.get('phone')
+        user_avail_update.location = request.POST.get('location')
+        user_avail_update.description = request.POST.get('description')
+        user_avail_update.save()
         return redirect('home:profile')
 
 class RenterProfile(BaseView):
     def get(self,request):
         self.template_context['rentvehicles'] = VehicleAvailable.objects.filter(user__id=self.request.user.id)
-        vehicle_req = VehicleAvailable.objects.get(user = request.user )
-        self.template_context ['requests'] = UserAvailable.objects.filter(items = vehicle_req )
+        vehicle_req = VehicleAvailable.objects.filter(user = request.user )
+        self.template_context ['requests'] = UserAvailable.objects.filter(items = vehicle_req[0])
+        self.template_context['approvedcount'] = UserAvailable.objects.filter(approved=True)
         print(self.template_context['rentvehicles'])
         query = request.GET.get('query')
         if query is not None and query != '':
@@ -272,21 +272,22 @@ class RenterProfile(BaseView):
     def post(self, request, slug):
         #     print(slug)
         get_vech = VehicleAvailable.objects.get(slug=slug)
-        UserAvailable.objects.get(items=get_vech).delete()
+        UserAvailable.objects.get(items=get_vech,user = request.user).delete()
         return redirect('home:renter-profile')
 
 class RenterApproval(BaseView):
     def get(self,request,slug):
-        ordered_vehicle = VehicleAvailable.objects.get(user = request.user)
+        ordered_vehicle = VehicleAvailable.objects.get(slug = slug, user = request.user)
         self.template_context['orderedfrom'] = UserAvailable.objects.filter(items = ordered_vehicle)
-        self.template_context['approvedcount'] = UserAvailable.objects.filter(approved = True )
+        self.template_context['approvedcount'] = UserAvailable.objects.filter(approved = True)
         return render(request, 'rent-approve-reservation.html',self.template_context )
 
 
 class RenterAprovalFixOrder(BaseView):
-    def post(self,request,user_id):
+    def post(self,request,slug,user_id):
+        get_vech = VehicleAvailable.objects.get(slug=slug)
         if 'approve-btn-service' in request.POST:
-            ordered_user = UserAvailable.objects.get(user__id=user_id)
+            ordered_user = UserAvailable.objects.get(items= get_vech,user__id=user_id)
             print("---------------------------------------------")
             print(ordered_user)
             ordered_user.approved = True
@@ -294,10 +295,9 @@ class RenterAprovalFixOrder(BaseView):
             ordered_user.save()
             return redirect('home:renter-profile')
         if 'reject-rent-cmn-btn' in request.POST:
-            ordered_user = UserAvailable.objects.get(user__id=user_id)
+            ordered_user = UserAvailable.objects.get(items = get_vech,user__id=user_id)
             print(ordered_user)
             ordered_user.approved = False
             # ordered_user.rejected = True
             ordered_user.save()
             return redirect('home:renter-profile')
-
