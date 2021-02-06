@@ -53,6 +53,7 @@
         <div class="row mt-70">
             <div class="col-lg-12">
                 <div class="car-search-result-area list--view row mb-none-30">
+                    {% if requests.count != 0 %}
                     {% for renter in rentvehicles %}
                     <div class="col-md-6 col-12">
                         <div class="car-item car-item--style2">
@@ -96,6 +97,7 @@
                     <!-- car-item end -->
 
                     {% endfor %}
+                    {% endif %}
                 </div>
 
                 <nav class="d-pagination" aria-label="Page navigation example">
