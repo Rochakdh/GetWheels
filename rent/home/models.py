@@ -40,6 +40,7 @@ class VehicleAvailable(models.Model):
     km_travelled = models.IntegerField()
     slug  = models.SlugField(unique=True)
     ordered = models.BooleanField(default=False)
+    terms = models.BooleanField(default=False)
     # date_created = models.DateTimeField(auto_now_add=True,default='')
     # date_modifried = models.DateTimeField(auto_now=True,default='')
     # slug_random=''.join(random.choice(string.ascii_letters + string.digits) for _ in range(6))
@@ -71,8 +72,7 @@ class ItemsOrdered(models.Model): #all vehicles detail tha has been ordered for 
     item = models.ForeignKey(VehicleAvailable,on_delete=models.CASCADE)
     # orderedfrom = models.ForeignKey(Renter,on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
-    free = models.BooleanField(default=False)
-
+    terms = models.BooleanField(default=False)
     def __str__(self):
         return self.user.username +"-->"+ self.item.__str__()
 

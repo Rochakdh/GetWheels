@@ -17,14 +17,12 @@ from django.contrib.auth.decorators import login_required
 from .forms import ConsultaionForm
 
 
-
 # Create your views here.
 
 class BaseView(View):
     template_context = {
 
     }
-
 
 class IndexView(BaseView):
     def post(self, request):
@@ -115,7 +113,7 @@ class RentVehicles(View):# /rent
         username = self.request.POST.get('UserName')
         password = self.request.POST.get('Password')
         user = auth.authenticate(username=username, password=password)
-        if request.user:
+        if request.user.is_authenticated:
             username = request.user
             code=request.POST.get('code')
             # codecheck=get_object_or_404(Renter, autocode=code)
@@ -130,6 +128,7 @@ class RentVehicles(View):# /rent
             date = request.POST.get('date')
             description = request.POST.get('description')
             km = request.POST.get('km')
+            terms = request.POST.get('terms')
             slug=manufacturer+"-"+model+"-"+type+"-"+date
             availvech = VehicleAvailable.objects.create(
                 user=username,
@@ -148,6 +147,7 @@ class RentVehicles(View):# /rent
                 km_travelled = km,
                 slug=slug,
                 ordered=False,
+                terms = terms
             )
             availvech.save()
             return render(request, 'home-two.html')
@@ -176,9 +176,16 @@ class ReservationDetailView(DetailView):
         if request.user.is_authenticated:
             username = request.user
             phone = request.POST.get('phone')
+            if phone == '' and phone==str:
+                messages.error(request, "Invalid Phone Number ")
+                return redirect('home:reservation', slug=slug)
             location = request.POST.get('location')
             description = request.POST.get('description')
+            terms = request.POST.get('terms')
             item = get_object_or_404(VehicleAvailable, slug=slug)
+            if not terms:
+                messages.error(request, "Please Accept Term And Conditions ")
+                return redirect('home:reservation', slug=slug)
             # renter_details=get_object_or_404(Renter,autocode=item.vech_owner.autocode)
             ordervech = UserAvailable.objects.create(
                 # items=item,
@@ -197,7 +204,7 @@ class ReservationDetailView(DetailView):
                 item=item,
                 # orderedfrom=renter_details,
                 ordered=True,
-                free=False,
+                terms=terms,
             )
             store_item.save()
             return redirect('home:home')
@@ -254,11 +261,16 @@ class UpdateOrder(BaseView):
 
 class RenterProfile(BaseView):
     def get(self,request):
-        self.template_context['rentvehicles'] = VehicleAvailable.objects.filter(user__id=self.request.user.id)
+        self.template_context['rentvehicles'] = VehicleAvailable.objects.filter(user=self.request.user)
         vehicle_req = VehicleAvailable.objects.filter(user = request.user )
-        self.template_context ['requests'] = UserAvailable.objects.filter(items = vehicle_req[0])
+        print(vehicle_req)
+        try:
+            self.template_context ['requests'] = UserAvailable.objects.filter(items = vehicle_req[0])
+        except IndexError:
+            self.template_context['requests'] = UserAvailable.objects.filter(items=vehicle_req)
         self.template_context['approvedcount'] = UserAvailable.objects.filter(approved=True)
-        print(self.template_context['rentvehicles'])
+        # print(self.template_context['rentvehicles'])
+        print("+++++++++++++++++++CCCCCCCCCCC")
         query = request.GET.get('query')
         if query is not None and query != '':
             self.template_context['search_result'] = VehicleAvailable.objects.filter(
@@ -289,7 +301,7 @@ class RenterAprovalFixOrder(BaseView):
         if 'approve-btn-service' in request.POST:
             ordered_user = UserAvailable.objects.get(items= get_vech,user__id=user_id)
             print("---------------------------------------------")
-            print(ordered_user)
+            # print(ordered_user)
             ordered_user.approved = True
             # ordered_user.rejected = False
             ordered_user.save()
@@ -301,3 +313,12 @@ class RenterAprovalFixOrder(BaseView):
             # ordered_user.rejected = True
             ordered_user.save()
             return redirect('home:renter-profile')
+            
+
+class About(BaseView):
+    def get(self,request):
+        return render(request,'about.html')
+
+class Terms(BaseView):
+    def get(self,request):
+        return render(request,'terms.html')

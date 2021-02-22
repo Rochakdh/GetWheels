@@ -73,13 +73,6 @@
               <div class="row">
                 <div class="form-group col-xl-12">
                   <i class="fa fa-map-marker"></i>
-                  <input class="form-control has-icon" type="text" placeholder="Registrtation Code" name="code">
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="form-group col-xl-12">
-                  <i class="fa fa-map-marker"></i>
                   <input class="form-control has-icon" type="text" placeholder="Km Travelled" name="km">
                 </div>
               </div>
@@ -89,7 +82,16 @@
                   <i class="fa fa-map-marker"></i>
                   <input class="form-control has-icon" type="text" placeholder="Descriptiom" name="description">
                 </div>
+               </div>
+              <div class="row">
+                 <input id="terms" type="checkbox" name="terms" value="True">
+                      <label for="terms"> I Accept all <a href="{% url 'home:terms' %}" target="_blank">Terms and Conditions</a></label><br>
               </div>
+
+
+
+
+
 
               <button type="submit" class="cmn-btn btn-radius" name="rent">RENT</button>
 
