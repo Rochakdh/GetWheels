@@ -20,11 +20,12 @@ from .forms import ConsultaionForm
 # Create your views here.
 
 class BaseView(View):
+    #context variable ho template ma value pathuxa
     template_context = {
 
     }
 
-class IndexView(BaseView):
+class IndexView(BaseView): #home
     def post(self, request):
         form = ConsultaionForm(request.POST)
         if form.is_valid():
@@ -38,7 +39,7 @@ class IndexView(BaseView):
         self.template_context['form'] = form
         return render(request, 'index.html', self.template_context)
 
-class LogoutView(RedirectView):
+class LogoutView(RedirectView):# logout paxi home page ma janey
     url = reverse_lazy('home:home')
 
     def dispatch(self, request, *args, **kwargs):
@@ -46,15 +47,15 @@ class LogoutView(RedirectView):
         return super(LogoutView, self).dispatch(request, *args, **kwargs)
 
 
-class LoginView(BaseView):
+class LoginView(BaseView): #login garney
     def post(self, request):
         if self.request.method == 'POST' and 'go_btn' in self.request.POST:
             username = self.request.POST.get('UserName')
             password = self.request.POST.get('Password')
-            user = auth.authenticate(username=username, password=password)
+            user = auth.authenticate(username=username, password=password) #authenticate garxa
             if user is not None:
-                auth.login(self.request, user)
-                return render(request, 'index.html', self.template_context)
+                auth.login(self.request, user) #login
+                return render(request, 'index.html', self.template_context) #home page ma janx
             else:
                 messages.error(request,'Login Failed')
         return render(request, 'login.html', self.template_context)
@@ -66,7 +67,7 @@ class LoginView(BaseView):
         else:
             return render(request, 'login.html', self.template_context)
 
-class SignupView(BaseView):
+class SignupView(BaseView): #signup garxa
     def post(self, request):
         if 'signup_btn' in self.request.POST:
             username = self.request.POST.get('UserName')
@@ -86,18 +87,18 @@ class SignupView(BaseView):
                         email=email,
                         password=password
                     )
-                    user.save()
+                    user.save() # new user banxa
         return redirect('home:login')
 
     def get(self, request):
         return render(request, 'registration.html')
 
 
-class Available(BaseView): #/available
+class Available(BaseView): #/available  #sell all vehicle available
     def get(self,request):
         self.template_context['avehicles'] = VehicleAvailable.objects.all()
         query = request.GET.get('query')
-        if query is not None and query != '':
+        if query is not None and query != '': #search
             self.template_context['search_result'] = VehicleAvailable.objects.filter(
                 Q(type__icontains=query)| Q(model__icontains=query) |Q(manufacturer_company__startswith=query)|
                 Q(manufacturer_company__endswith=query)
@@ -108,7 +109,7 @@ class Available(BaseView): #/available
             return render(request,'car-list-two.html',self.template_context)
 
 
-class RentVehicles(View):# /rent
+class RentVehicles(View):# /rent # rent ko form lagi
     def post(self, request):
         username = self.request.POST.get('UserName')
         password = self.request.POST.get('Password')
@@ -158,12 +159,12 @@ class RentVehicles(View):# /rent
     def get(self,request):
         return render(request, 'home-two.html')
 
-class Reservation(BaseView):
+class Reservation(BaseView): # reservation page ko lagi
     def get(self, request):
         return render(request, 'reservation.html', self.template_context)
 
 
-class ReservationDetailView(DetailView):
+class ReservationDetailView(DetailView): #reservation ko detail view
     model = VehicleAvailable
     template_name = 'reservation.html'
     def get(self,request,slug):
@@ -212,7 +213,7 @@ class ReservationDetailView(DetailView):
             messages.error(request,"Please Login First")
             return redirect(reverse('home:login'))
 
-class Profile(BaseView): #/profile
+class Profile(BaseView): #/profile  #hirer ko profile display
     def get(self,request):
         self.template_context['ovehicles'] = UserAvailable.objects.filter(user__id = self.request.user.id)
         query = request.GET.get('query')
@@ -238,7 +239,7 @@ class Profile(BaseView): #/profile
             return redirect('home:profile')
 
 
-class UpdateOrder(BaseView):
+class UpdateOrder(BaseView): #edit order
     def get(self,request,slug):
         get_vech = VehicleAvailable.objects.filter(slug=slug)[0]
         user_detail = VehicleAvailable.objects.get(slug=slug)
@@ -259,7 +260,7 @@ class UpdateOrder(BaseView):
         user_avail_update.save()
         return redirect('home:profile')
 
-class RenterProfile(BaseView):
+class RenterProfile(BaseView): #renter ko profile
     def get(self,request):
         self.template_context['rentvehicles'] = VehicleAvailable.objects.filter(user=self.request.user)
         vehicle_req = VehicleAvailable.objects.filter(user = request.user )
@@ -287,7 +288,7 @@ class RenterProfile(BaseView):
         UserAvailable.objects.get(items=get_vech,user = request.user).delete()
         return redirect('home:renter-profile')
 
-class RenterApproval(BaseView):
+class RenterApproval(BaseView):   #renter ko profile ma kati ota hirer ko request aako xa dekhauney
     def get(self,request,slug):
         ordered_vehicle = VehicleAvailable.objects.get(slug = slug, user = request.user)
         self.template_context['orderedfrom'] = UserAvailable.objects.filter(items = ordered_vehicle)
@@ -295,7 +296,7 @@ class RenterApproval(BaseView):
         return render(request, 'rent-approve-reservation.html',self.template_context )
 
 
-class RenterAprovalFixOrder(BaseView):
+class RenterAprovalFixOrder(BaseView):#hirer ko request approve garney
     def post(self,request,slug,user_id):
         get_vech = VehicleAvailable.objects.get(slug=slug)
         if 'approve-btn-service' in request.POST:
@@ -318,6 +319,10 @@ class RenterAprovalFixOrder(BaseView):
 class About(BaseView):
     def get(self,request):
         return render(request,'about.html')
+
+class Contact(BaseView):
+    def get(self,request):
+        return render(request,'contact.html')
 
 class Terms(BaseView):
     def get(self,request):
