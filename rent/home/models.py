@@ -53,7 +53,7 @@ class VehicleAvailable(models.Model):
         return reverse("home:reservation", kwargs={'slug': self.slug})
 
 
-class UserAvailable(models.Model):#all details of users that want to order vehicle
+class UserAvailable(models.Model):#all details of users that want to order vehicle # hirer ko detail
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,default=None,null=True)
     phone=models.IntegerField(null=True, blank=True)
     items = models.ManyToManyField(VehicleAvailable)
@@ -67,7 +67,7 @@ class UserAvailable(models.Model):#all details of users that want to order vehic
         return self.user.username +"-->"+ self.items.__str__()
 
 
-class ItemsOrdered(models.Model): #all vehicles detail tha has been ordered for trasanction history
+class ItemsOrdered(models.Model): #all vehicles detail that has been ordered for trasanction history (admin)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.DO_NOTHING)
     item = models.ForeignKey(VehicleAvailable,on_delete=models.CASCADE)
     # orderedfrom = models.ForeignKey(Renter,on_delete=models.CASCADE)
@@ -76,7 +76,7 @@ class ItemsOrdered(models.Model): #all vehicles detail tha has been ordered for 
     def __str__(self):
         return self.user.username +"-->"+ self.item.__str__()
 
-class Consultaion(models.Model):
+class Consultaion(models.Model): #home page ko form (admin)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField()
