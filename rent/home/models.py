@@ -82,3 +82,5 @@ class Consultaion(models.Model): #home page ko form (admin)
     email = models.EmailField()
     message = models.TextField()
     phone_no = models.IntegerField()
+
+    
